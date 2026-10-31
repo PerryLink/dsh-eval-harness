@@ -5,10 +5,28 @@
   "type": "module",
   "main": "./lib/plugin/index.js",
   "types": "./lib/plugin/index.d.ts",
-  "exports": { ".": { "types": "./lib/plugin/index.d.ts", "default": "./lib/plugin/index.js" } },
-  "files": ["lib", "cordis.patch.yml", "README.md", "LICENSE", "NOTICE"],
-  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
-  "engines": { "dsh": ">=0.2.1-rc.3 <0.3.0", "node": ">=24.9.0 <25" },
+  "exports": {
+    ".": {
+      "types": "./lib/plugin/index.d.ts",
+      "default": "./lib/plugin/index.js"
+    }
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "dsh": ">=0.2.1-rc.3 <0.3.0",
+    "node": ">=24.9.0 <25"
+  },
   "packageManager": "pnpm@11.28.5",
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -17,10 +35,22 @@
     "test": "pnpm build && node --test test/*.test.mjs",
     "prepublishOnly": "node scripts/check-npm-name.mjs"
   },
-  "keywords": ["deepseek-harness", "dsh", "dsh-plugin", "eval", "harness", "perrylink"],
-  "repository": { "type": "git", "url": "git+https://github.com/PerryLink/dsh-eval-harness.git" },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "eval",
+    "harness",
+    "perrylink"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PerryLink/dsh-eval-harness.git"
+  },
   "license": "Apache-2.0",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.0.5 <5",
     "@deepseek-ai/dsh-tools": ">=0.2.1-rc.3 <0.3.0"
@@ -29,6 +59,6 @@
     "@deepseek-ai/cordis": "4.0.5",
     "@deepseek-ai/dsh-tools": "0.2.1-rc.3",
     "@types/node": "^24.0.0",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   }
 }
