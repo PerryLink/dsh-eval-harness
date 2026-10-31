@@ -1,0 +1,3 @@
+- insert:
+    - id: dsh-eval-harness
+      name: '@perrylink/dsh-eval-harness'
