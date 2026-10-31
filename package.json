@@ -1,7 +1,7 @@
 {
   "name": "@perrylink/dsh-eval-harness",
-  "version": "0.1.0-alpha.0",
-  "description": "Public/synthetic eval-pack lint and deterministic grader; not a validated Proofbench, not a runner, no customer evidence.",
+  "version": "0.1.0-alpha.1",
+  "description": "Public/synthetic eval-pack lint and deterministic JSON grader; not a validated benchmark.",
   "type": "module",
   "main": "./lib/plugin/index.js",
   "types": "./lib/plugin/index.d.ts",
@@ -42,7 +42,8 @@
     "dsh-plugin",
     "eval",
     "harness",
-    "perrylink"
+    "perrylink",
+    "testing"
   ],
   "repository": {
     "type": "git",
@@ -61,5 +62,9 @@
     "@deepseek-ai/dsh-tools": "0.2.1-rc.3",
     "@types/node": "^24.0.0",
     "typescript": "7.0.2"
+  },
+  "homepage": "https://github.com/PerryLink/dsh-eval-harness#readme",
+  "bugs": {
+    "url": "https://github.com/PerryLink/dsh-eval-harness/issues"
   }
 }
