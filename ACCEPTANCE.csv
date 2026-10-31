@@ -1,0 +1,4 @@
+req_id,metric,actual,pass,source,counted
+EVAL-A01,valid pack accepted,true,true,public/synthetic,false
+EVAL-A02,duplicate task ids rejected,true,true,public/synthetic,false
+EVAL-A03,deterministic grade,true,true,public/synthetic,false
