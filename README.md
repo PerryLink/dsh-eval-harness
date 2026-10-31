@@ -1,14 +1,16 @@
-# @perrylink/dsh-eval-harness
+# dsh-eval-pack
 
 Public/synthetic eval-pack lint and deterministic JSON grader for DeepSeek Harness.
 
 > **Status: alpha / public-synthetic / partial / not counted / not GA.** No customer evidence, customer data, or production-readiness claim. All acceptance rows are `counted=false`.
 
+> **Renamed:** this project was previously `dsh-eval-harness` / `@perrylink/dsh-eval-harness`. The bare npm name `dsh-eval-harness` is owned by another publisher, so the project is now **`dsh-eval-pack`**. The old scoped package is deprecated and points here.
+
 ## Install
 
 ```sh
-dsh plugin --profile <profile> add @perrylink/dsh-eval-harness
-dsh --profile <profile> --dump-config | grep dsh-eval-harness
+dsh plugin --profile <profile> add dsh-eval-pack
+dsh --profile <profile> --dump-config | grep dsh-eval-pack
 ```
 
 Requires DSH `>=0.2.1-rc.3 <0.3.0` and Node `>=24.9 <25`.
@@ -16,7 +18,7 @@ Requires DSH `>=0.2.1-rc.3 <0.3.0` and Node `>=24.9 <25`.
 <details>
 <summary>中文摘要</summary>
 
-公开/合成 eval-pack lint 与确定性 JSON 评分。 安装：`dsh plugin --profile <profile> add @perrylink/dsh-eval-harness`。公开/合成、alpha、非 GA。
+公开/合成 eval-pack lint 与确定性 JSON 评分。 安装：`dsh plugin --profile <profile> add dsh-eval-pack`。公开/合成、alpha、非 GA。
 
 </details>
 

@@ -1,6 +1,6 @@
 {
-  "name": "@perrylink/dsh-eval-harness",
-  "version": "0.1.0-alpha.1",
+  "name": "dsh-eval-pack",
+  "version": "0.1.0-alpha.2",
   "description": "Public/synthetic eval-pack lint and deterministic JSON grader; not a validated benchmark.",
   "type": "module",
   "main": "./lib/plugin/index.js",
@@ -47,7 +47,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PerryLink/dsh-eval-harness.git"
+    "url": "git+https://github.com/PerryLink/dsh-eval-pack.git"
   },
   "license": "Apache-2.0",
   "publishConfig": {
@@ -63,8 +63,8 @@
     "@types/node": "^24.0.0",
     "typescript": "7.0.2"
   },
-  "homepage": "https://perrylink.github.io/dsh-plugins/packages/dsh-eval-harness.html",
+  "homepage": "https://perrylink.github.io/dsh-plugins/packages/dsh-eval-pack.html",
   "bugs": {
-    "url": "https://github.com/PerryLink/dsh-eval-harness/issues"
+    "url": "https://github.com/PerryLink/dsh-eval-pack/issues"
   }
 }
