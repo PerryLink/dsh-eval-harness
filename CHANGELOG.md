@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.0-alpha.8] — 2026-11-01
+
+### Added
+
+- `eval.summary`: aggregate pass count, pass rate and failing task ids for a graded run, using the same grader as `eval.grade`.
+- Canonical-JSON grading: object key order no longer changes the verdict; array order still matters.
+
+Verified by `node --test test/*.test.mjs` (7/7).
+
 ## [0.1.0-alpha.7] — 2026-11-01
 
 ### Changed

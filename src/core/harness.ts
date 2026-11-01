@@ -17,6 +17,37 @@ export function lintPack(input: unknown): string[] {
   }
   return errors
 }
+/** Stable serialisation: object keys sorted at every level, arrays kept in order. */
+export function canonical(value: unknown): string {
+  const walk = (input: unknown): unknown => {
+    if (Array.isArray(input)) return input.map(walk)
+    if (input && typeof input === 'object') {
+      const out: Record<string, unknown> = {}
+      for (const key of Object.keys(input as Record<string, unknown>).sort()) out[key] = walk((input as Record<string, unknown>)[key])
+      return out
+    }
+    return input
+  }
+  return JSON.stringify(walk(value))
+}
 export function grade(actual: unknown, expected: unknown): boolean {
-  return JSON.stringify(actual) === JSON.stringify(expected)
+  return canonical(actual) === canonical(expected)
+}
+export interface EvalResult { id: string; actual: unknown; expected: unknown }
+export interface EvalSummary {
+  total: number
+  passed: number
+  failed: number
+  pass_rate: number
+  failures: string[]
+}
+export function summarize(results: EvalResult[]): EvalSummary {
+  const failures: string[] = []
+  let passed = 0
+  for (const r of results) {
+    if (grade(r.actual, r.expected)) passed += 1
+    else failures.push(r.id)
+  }
+  const total = results.length
+  return { total, passed, failed: total - passed, pass_rate: total ? Math.round((passed / total) * 1e6) / 1e6 : 0, failures }
 }
