@@ -51,3 +51,31 @@ export function summarize(results: EvalResult[]): EvalSummary {
   const total = results.length
   return { total, passed, failed: total - passed, pass_rate: total ? Math.round((passed / total) * 1e6) / 1e6 : 0, failures }
 }
+
+function comb(n: number, k: number): bigint {
+  if (k < 0 || k > n) return 0n
+  let result = 1n
+  for (let i = 1n; i <= BigInt(k); i += 1n) result = (result * (BigInt(n) - BigInt(k) + i)) / i
+  return result
+}
+export interface PassAtKInput { task_id: string; samples: number; correct: number }
+export interface PassAtKResult { task_id: string; k: number; n: number; c: number; pass_at_k: number }
+/**
+ * Unbiased pass@k estimator: 1 - C(n-c, k) / C(n, k).
+ * Clean-room from the published estimator definition; exact binomials via BigInt.
+ */
+export function passAtK(task: PassAtKInput, k: number): PassAtKResult {
+  const { samples, correct } = task
+  if (!Number.isInteger(samples) || samples < 1) throw new Error('E_EVAL_SAMPLES: samples must be a positive integer')
+  if (!Number.isInteger(correct) || correct < 0 || correct > samples) throw new Error('E_EVAL_CORRECT: correct must be between 0 and samples')
+  if (!Number.isInteger(k) || k < 1 || k > samples) throw new Error('E_EVAL_K: k must be between 1 and samples')
+  const denominator = comb(samples, k)
+  const numerator = comb(samples - correct, k)
+  const value = 1 - Number(numerator) / Number(denominator)
+  return { task_id: task.task_id, k, n: samples, c: correct, pass_at_k: Math.round(value * 1e6) / 1e6 }
+}
+export function passAtKMean(tasks: PassAtKInput[], k: number): { k: number; tasks: PassAtKResult[]; mean: number } {
+  const results = tasks.map((t) => passAtK(t, k))
+  const mean = results.length ? Math.round((results.reduce((sum, r) => sum + r.pass_at_k, 0) / results.length) * 1e6) / 1e6 : 0
+  return { k, tasks: results, mean }
+}

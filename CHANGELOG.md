@@ -1,6 +1,12 @@
 # Changelog
 
-## [0.1.0-alpha.8] — 2026-11-01
+## [0.1.0-alpha.9] — 2026-11-01
+
+### Added
+
+- `eval.pass_at_k`: unbiased pass@k estimator `1 - C(n-c,k)/C(n,k)` with exact binomials, plus the per-task and mean values. Verified by `node --test test/*.test.mjs` (12/12).
+
+## [Unreleased]
 
 ### Added
 

@@ -1,5 +1,5 @@
 import { defineTool } from '@deepseek-ai/dsh-tools'
-import { grade, lintPack, summarize } from '../core/harness.js'
+import { grade, lintPack, passAtKMean, summarize } from '../core/harness.js'
 const text = (t: string) => [{ type: 'text' as const, text: t }]
 export function createTools() {
   const lint = defineTool({
@@ -23,5 +23,12 @@ export function createTools() {
     output: { schema: { type: 'object', additionalProperties: false, properties: { total: { type: 'number', required: true }, passed: { type: 'number', required: true }, failed: { type: 'number', required: true }, pass_rate: { type: 'number', required: true }, failures: { type: 'array', items: { type: 'string' }, required: true } } }, render: (_a, v) => text(`summary ${v.passed}/${v.total}`) },
     async execute(args) { return summarize(args.results) },
   })
-  return [lint, gradeTool, summary]
+  const passAtKTool = defineTool({
+    name: 'eval.pass_at_k',
+    description: 'Unbiased pass@k for sampled tasks: 1 - C(n-c, k)/C(n, k), exact binomials. Read-only; no runner.',
+    parameters: { k: { type: 'number', required: true }, tasks: { type: 'array', required: true, items: { type: 'object', additionalProperties: false, properties: { task_id: { type: 'string', required: true }, samples: { type: 'number', required: true }, correct: { type: 'number', required: true } } } } },
+    output: { schema: { type: 'object', additionalProperties: false, properties: { k: { type: 'number', required: true }, mean: { type: 'number', required: true }, tasks: { type: 'array', required: true, items: { type: 'object', additionalProperties: false, properties: { task_id: { type: 'string', required: true }, pass_at_k: { type: 'number', required: true } } } } } }, render: (_a, v) => text(`pass@${v.k} mean ${v.mean}`) },
+    async execute(args) { const r = passAtKMean(args.tasks, args.k); return { k: r.k, mean: r.mean, tasks: r.tasks.map((t) => ({ task_id: t.task_id, pass_at_k: t.pass_at_k })) } },
+  })
+  return [lint, gradeTool, summary, passAtKTool]
 }

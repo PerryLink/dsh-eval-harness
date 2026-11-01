@@ -1,6 +1,6 @@
 {
   "name": "dsh-eval-pack",
-  "version": "0.1.0-alpha.8",
+  "version": "0.1.0-alpha.9",
   "description": "Public/synthetic eval-pack lint and deterministic JSON grader; not a validated benchmark.",
   "type": "module",
   "main": "./lib/plugin/index.js",

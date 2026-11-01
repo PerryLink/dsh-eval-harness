@@ -5,3 +5,4 @@ EVAL-A03,deterministic grade,true,true,public/synthetic,false
 EVAL-A04,canonical grading ignores key order,true,true,public/synthetic,false
 EVAL-A05,array order still matters,true,true,public/synthetic,false
 EVAL-A06,run summary pass rate,true,true,public/synthetic,false
+EVAL-A07,pass@k estimator,true,true,public/synthetic,false
