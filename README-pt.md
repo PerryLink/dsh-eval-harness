@@ -84,7 +84,7 @@ dsh --profile <profile> --dump-config | grep dsh-eval-pack
 
 ### Exemplo com fixture
 
-Entrada: `fixtures/`
+Entrada: [`ACCEPTANCE.csv`](ACCEPTANCE.csv)
 
 Comando: `pnpm test`
 

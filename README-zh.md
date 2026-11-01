@@ -84,7 +84,7 @@ dsh --profile <profile> --dump-config | grep dsh-eval-pack
 
 ### fixture 支撑的示例
 
-输入: `fixtures/`
+输入: [`ACCEPTANCE.csv`](ACCEPTANCE.csv)
 
 命令: `pnpm test`
 

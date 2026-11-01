@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
 const j = JSON.parse(readFileSync('package.json', 'utf8'))
-if (j.name !== 'dsh-eval-pack' || j.version !== '0.1.0-alpha.5') throw new Error('meta')
+if (j.name !== 'dsh-eval-pack' || j.version !== '0.1.0-alpha.6') throw new Error('meta')
 if (!j.dsh?.bundle?.patch) throw new Error('bundle')
 console.log('lint ok')
