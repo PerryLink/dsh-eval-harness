@@ -33,6 +33,10 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 *工作流：本地输入 → 插件 → 本地输出；不需要调用模型。*
 
+![Real dsh-eval-pack terminal output](docs/assets/dsh-eval-pack-hero.png)
+
+*本地真实测试运行；不调用模型或网络。*
+
 ## 安装
 
 安装并验证：
@@ -84,7 +88,7 @@ dsh --profile <profile> --dump-config | grep dsh-eval-pack
 
 ### fixture 支撑的示例
 
-输入: [`ACCEPTANCE.csv`](ACCEPTANCE.csv)
+输入: [`ACCEPTANCE.csv`](https://github.com/PerryLink/dsh-eval-pack/blob/main/ACCEPTANCE.csv)
 
 命令: `pnpm test`
 
@@ -134,6 +138,9 @@ pnpm build && pnpm lint && pnpm typecheck && pnpm test
 
 兄弟包与家族索引： [dsh-policy-ledger](https://github.com/PerryLink/dsh-policy-ledger) · [dsh-pim-lint](https://github.com/PerryLink/dsh-pim-lint)
 
+相关工具（英文表）: [Related tools](README.md#related-tools).
+
+- [故障排查（英文）](TROUBLESHOOTING.md)
 - [领域索引](https://perrylink.github.io/dsh-plugins/)
 - [Checker 家族](https://perrylink.github.io/zh/checkers/)
 - [主线家族](https://github.com/PerryLink/dsh-kit)

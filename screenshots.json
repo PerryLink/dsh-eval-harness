@@ -1,0 +1,14 @@
+[
+  {
+    "path": "docs/assets/dsh-eval-pack-hero.png",
+    "kind": "hero",
+    "alt": "dsh-eval-pack terminal output",
+    "caption": "Real dsh-eval-pack local test run; 3 tests passed."
+  },
+  {
+    "path": "docs/assets/dsh-eval-pack-demo.gif",
+    "kind": "demo",
+    "alt": "Animated dsh-eval-pack terminal session",
+    "caption": "The same run, assembled line by line."
+  }
+]

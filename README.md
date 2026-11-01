@@ -33,6 +33,10 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 *Workflow: local input → plugin → local output. No model call is required.*
 
+![Real dsh-eval-pack terminal output](docs/assets/dsh-eval-pack-hero.png)
+
+*Real local test run; no model or network call.*
+
 ## Install
 
 Install and verify:
@@ -84,7 +88,7 @@ dsh --profile <profile> --dump-config | grep dsh-eval-pack
 
 ### Fixture-backed example
 
-Input: [`ACCEPTANCE.csv`](ACCEPTANCE.csv)
+Input: [`ACCEPTANCE.csv`](https://github.com/PerryLink/dsh-eval-pack/blob/main/ACCEPTANCE.csv)
 
 Command: `pnpm test`
 
@@ -134,6 +138,18 @@ pnpm build && pnpm lint && pnpm typecheck && pnpm test
 
 Sibling packages and family indexes: [dsh-policy-ledger](https://github.com/PerryLink/dsh-policy-ledger) · [dsh-pim-lint](https://github.com/PerryLink/dsh-pim-lint)
 
+
+### Related tools
+
+Each entry is a separate package with its own tool surface and version; install only the ones you need.
+
+| Package | Why it is relevant |
+|---|---|
+| [`dsh-score`](https://github.com/PerryLink/dsh-score) | Scoring and evaluation utilities. |
+| [`dsh-doublecheck`](https://github.com/PerryLink/dsh-doublecheck) | Requirements/test/adversary quality gate. |
+| [`dsh-test-drive`](https://github.com/PerryLink/dsh-test-drive) | Test-driving workflows and CI checks. |
+
+- [Troubleshooting](TROUBLESHOOTING.md)
 - [Domain index](https://perrylink.github.io/dsh-plugins/)
 - [Checker family](https://perrylink.github.io/zh/checkers/)
 - [Mainline family](https://github.com/PerryLink/dsh-kit)

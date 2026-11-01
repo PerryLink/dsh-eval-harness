@@ -33,6 +33,10 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 *Fluxo: entrada local → plugin → saída local. Não exige chamada a modelo.*
 
+![Real dsh-eval-pack terminal output](docs/assets/dsh-eval-pack-hero.png)
+
+*Execução local real; sem modelo ou rede.*
+
 ## Instalação
 
 Instalar e verificar:
@@ -84,7 +88,7 @@ dsh --profile <profile> --dump-config | grep dsh-eval-pack
 
 ### Exemplo com fixture
 
-Entrada: [`ACCEPTANCE.csv`](ACCEPTANCE.csv)
+Entrada: [`ACCEPTANCE.csv`](https://github.com/PerryLink/dsh-eval-pack/blob/main/ACCEPTANCE.csv)
 
 Comando: `pnpm test`
 
@@ -134,6 +138,9 @@ pnpm build && pnpm lint && pnpm typecheck && pnpm test
 
 Pacotes irmãos e índices da família: [dsh-policy-ledger](https://github.com/PerryLink/dsh-policy-ledger) · [dsh-pim-lint](https://github.com/PerryLink/dsh-pim-lint)
 
+Ferramentas relacionadas (tabela em inglês): [Related tools](README.md#related-tools).
+
+- [Solução de problemas (inglês)](TROUBLESHOOTING.md)
 - [Índice de domínio](https://perrylink.github.io/dsh-plugins/)
 - [Família de checkers](https://perrylink.github.io/zh/checkers/)
 - [Família principal](https://github.com/PerryLink/dsh-kit)
