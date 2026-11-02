@@ -3,3 +3,6 @@ lib/
 pack.json
 *.tgz
 .env
+
+# quickstart sample must ship with the package
+!samples/quickstart/input/pack.json

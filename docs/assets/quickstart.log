@@ -1,0 +1,6 @@
+$ node samples/quickstart/run.mjs
+dsh-eval-pack quickstart - synthetic eval pack (not a benchmark)
+pack synthetic-invoice-basics@1.0.0: lint ok, 3 tasks
+grades: case-01 pass, case-02 fail, case-03 pass
+summary: 2/3 passed (0.666667), failures: case-02
+pass@1 mean 0.633333; pass@3 mean 0.9

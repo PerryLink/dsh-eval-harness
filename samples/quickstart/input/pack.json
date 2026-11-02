@@ -1,0 +1,10 @@
+{
+  "name": "synthetic-invoice-basics",
+  "version": "1.0.0",
+  "description": "Three tiny invoice-arithmetic tasks for the quickstart. Synthetic; not a benchmark.",
+  "tasks": [
+    { "id": "case-01" },
+    { "id": "case-02" },
+    { "id": "case-03" }
+  ]
+}
