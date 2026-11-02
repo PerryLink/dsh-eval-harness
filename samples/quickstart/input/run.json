@@ -1,0 +1,14 @@
+{
+  "run_id": "synthetic-run-2026-11-02",
+  "note": "Actual outputs of a synthetic reference run. No model was called; no customer data.",
+  "results": [
+    { "id": "case-01", "actual": { "total": 132.5 } },
+    { "id": "case-02", "actual": { "amount": "12.34", "currency": "EUR" } },
+    { "id": "case-03", "actual": { "gross": 108, "tax": 8, "net": 100 } }
+  ],
+  "sampling": [
+    { "task_id": "case-01", "samples": 10, "correct": 7 },
+    { "task_id": "case-02", "samples": 10, "correct": 3 },
+    { "task_id": "case-03", "samples": 10, "correct": 9 }
+  ]
+}

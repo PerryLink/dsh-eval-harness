@@ -37,6 +37,81 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 *本地真实测试运行；不调用模型或网络。*
 
+## 一句话
+
+把一小包评测样本逐条按 JSON 精确比对，给出通过率、失败项和 pass@k。
+
+## 适合 / 不适合
+
+- **适合**：想复核一个小评测包（3–50 个样本）的通过率，需要确定性的 JSON 相等评分、不接受模糊匹配的场景。
+- **不适合**：需要调用模型、主观打分或跑真实 benchmark 的场景；本包只做评分与汇总，不运行被测对象。
+
+## 输入
+
+- `pack.json`：`name`、`version` 与 `tasks`（任务 id 列表）。
+- 每个样本一个 JSON：`id`、`prompt`、`expected`；评分只看 `expected` 与运行结果里的 `actual`。
+- `run.json`：一次运行的结果 `results[].actual`，以及 pass@k 用的 `sampling[]`（`samples` / `correct`）。
+- 自带样例在 `samples/quickstart/input/`：3 个样本 JSON + 1 个 run 结果，合计远小于 500 KB。
+- 工具不设硬性大小上限；单个 JSON 建议 ≤1 MB，样例只是最小可复现集。
+
+## 输出
+
+- 终端摘要：lint 是否通过、逐条 pass/fail、通过率与失败 id、pass@1 与 pass@3。
+- 不写任何文件；需要留档时把 `--json` 的输出重定向到自己的文件即可。
+- 评分规则：对象键顺序不影响结果，数组顺序会影响结果，数字必须完全相等。
+
+## 示例
+
+直接复制这句话：
+
+> 我用自带样例跑一次评测：3 个样本里过了几个、哪个没过、pass@3 是多少？
+
+也可以自己跑（真实运行，截图即来自这条命令）：
+
+```sh
+node samples/quickstart/run.mjs
+```
+
+![dsh-eval-pack quickstart 真实运行输出](docs/assets/quickstart.png)
+
+*合成评测包 → 金标 `samples/quickstart/expected/result.json`；命令与哈希见 `screenshots.json`。*
+
+## 权限
+
+- 读：你指定的评测包 JSON、样本 JSON 与运行结果 JSON（由会话读取后作为参数传入）；不读其他目录
+- 写：无（四个工具全部只读，不写任何文件）
+- 联网：否（源码中没有 HTTP / DNS / WebSocket 调用）
+- 外部系统：无（不调用模型、不连接评测平台、不上传数据）
+
+四个工具全部标 **R0（只读）**；逐项见下方工具表。
+
+## FAQ
+
+### 装不上怎么办？
+
+确认 DSH `>=0.2.1-rc.3 <0.4.0`、Node `>=24.9 <25`，并用全新的 `DSH_HOME` 重试；完整步骤见 `TROUBLESHOOTING.md`。
+
+### 为什么两份 JSON 看起来一样却没通过？
+
+评分先做稳定序列化：对象的键顺序无所谓，但数组顺序、数字精度和字符串大小写都按原样比较；`12.34` 与 `12.35` 就是不相等。
+
+### pass@k 是怎么算的？
+
+用无偏估计 `1 - C(n-c, k) / C(n, k)`，其中 `n` 是每个任务的采样数、`c` 是其中正确的次数；`k` 不能超过 `n`。
+
+### 能处理我的真实评测集吗？
+
+可以本地运行，但本包是 alpha、只用公开/合成评测包验证，不构成 benchmark 结论；真实评测集请先脱敏。
+
+### 会联网或调用模型吗？
+
+不会。lint、评分与汇总全部在本机完成。
+
+## 版本
+
+- 当前版本：`0.1.0-alpha.12`（与 `package.json` 一致）
+- 测试：`node --test test/*.test.mjs` 全绿（14 个用例，0 失败）
+
 ## 安装
 
 安装并验证：
@@ -76,6 +151,8 @@ dsh plugin --profile <profile> remove dsh-eval-pack
 |---|---|---|
 | `eval.pack_lint` | 校验 eval-pack 名称/版本及任务 id 唯一性 | R0 |
 | `eval.grade` | 确定性的 JSON 相等评分 | R0 |
+| `eval.summary` | 汇总一次运行：通过数、通过率、失败任务 id | R0 |
+| `eval.pass_at_k` | 按采样数计算无偏 pass@k 与均值 | R0 |
 
 ## 快速开始
 
@@ -84,9 +161,9 @@ dsh plugin --profile <profile> add dsh-eval-pack
 dsh --profile <profile> --dump-config | grep dsh-eval-pack
 ```
 
-## 示例
+## 验收
 
-### fixture 支撑的示例
+### fixture 支撑的验收行
 
 输入: [`ACCEPTANCE.csv`](https://github.com/PerryLink/dsh-eval-pack/blob/main/ACCEPTANCE.csv)
 
@@ -109,7 +186,8 @@ dsh --profile <profile> --dump-config | grep dsh-eval-pack
 
 ## 公开样例
 
-公开/合成 fixture 在 `fixtures/`；`ACCEPTANCE.csv` 记录公开检查，全部 `counted=false`。
+- `samples/quickstart/`：随 npm 包一起发布的合成评测包（3 个样本 + run 结果 + 金标），`node samples/quickstart/run.mjs --check` 可直接复现金标。
+- `ACCEPTANCE.csv` 记录公开检查，除 `PS1-QS01` 外全部 `counted=false`。
 
 ## 开发
 

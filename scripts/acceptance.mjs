@@ -1,4 +1,6 @@
-import { writeFileSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { createTools } from '../lib/plugin/tools.js'
 const tools = Object.fromEntries(createTools().map((t) => [t.name, t]))
 const exec = { callId: 'eval-acceptance' }
@@ -20,6 +22,18 @@ const rows = [
   { req_id: 'EVAL-A07', metric: 'pass@k estimator', actual: pak.tasks[0].pass_at_k === 0.3 && pak5.tasks[0].pass_at_k > 0.3, expected: true },
 ]
 for (const row of rows) if (row.actual !== row.expected) throw new Error(`failed ${row.req_id}`)
-const csv = ['req_id,metric,actual,pass,source,counted', ...rows.map((r) => `${r.req_id},${r.metric},${r.actual},true,public/synthetic,false`)].join('\n') + '\n'
-writeFileSync('ACCEPTANCE.csv', csv)
-console.log('acceptance ok: 7/7 public/synthetic')
+
+// PS1-QS01: recompute the shipped quickstart and hash its golden file as evidence.
+const quickstart = execFileSync(process.execPath, ['samples/quickstart/run.mjs', '--check'], { cwd: process.cwd(), encoding: 'utf8' })
+if (!quickstart.includes('quickstart ok')) throw new Error('PS1-QS01 quickstart check did not print ok')
+const quickstartSha = createHash('sha256').update(readFileSync('samples/quickstart/expected/result.json')).digest('hex')
+const evidenceSha = createHash('sha256').update(JSON.stringify(rows)).digest('hex')
+
+const header = 'req_id,metric,threshold,actual,script,evidence_sha256,pass,source,counted'
+const lines = [
+  header,
+  ...rows.map((r) => `${r.req_id},${r.metric},1/1,${r.actual},scripts/acceptance.mjs,${evidenceSha},true,public/synthetic,false`),
+  `PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,${quickstartSha},true,synthetic/quickstart,true`,
+]
+writeFileSync('ACCEPTANCE.csv', lines.join('\n') + '\n')
+console.log('acceptance ok: 7/7 public/synthetic + PS1-QS01 quickstart')

@@ -1,5 +1,34 @@
 export interface EvalTask { id: string; expected?: unknown }
 export interface EvalPack { name: string; version: string; tasks: EvalTask[] }
+export type EvalErrorCode =
+  | 'E_PACK_NOT_OBJECT'
+  | 'E_PACK_NAME'
+  | 'E_PACK_VERSION'
+  | 'E_PACK_TASKS_EMPTY'
+  | 'E_TASK_ID'
+  | 'E_TASK_DUPLICATE'
+  | 'E_EVAL_SAMPLES'
+  | 'E_EVAL_CORRECT'
+  | 'E_EVAL_K'
+/**
+ * Human-facing wording for every code this package can surface.
+ * Renderer: `<一句人话>（E_CODE）｜下一步：<一个动作>` (Package Standard v1 §4).
+ */
+const EVAL_HUMAN: Record<EvalErrorCode, { text: string; next: string }> = {
+  E_PACK_NOT_OBJECT: { text: '这不是一个评测包对象，读不出名称、版本和任务', next: '传一个包含 name / version / tasks 的 JSON 对象' },
+  E_PACK_NAME: { text: '评测包缺少名称', next: '给评测包加一个非空的 name 再跑 lint' },
+  E_PACK_VERSION: { text: '评测包缺少版本号', next: '给评测包加一个非空的 version（例如 "1.0.0"）' },
+  E_PACK_TASKS_EMPTY: { text: '评测包里一个任务都没有', next: '往 tasks 里至少放一个带 id 的任务' },
+  E_TASK_ID: { text: '有一个任务没有 id', next: '给每个任务补一个非空且唯一的 id' },
+  E_TASK_DUPLICATE: { text: '评测包里有重复的任务 id', next: '把重复的 id 改成唯一值再跑 lint' },
+  E_EVAL_SAMPLES: { text: '采样数必须是正整数', next: '把 samples 改成 ≥1 的整数' },
+  E_EVAL_CORRECT: { text: '正确的样本数超过了采样数', next: '确认 correct ≤ samples 再算 pass@k' },
+  E_EVAL_K: { text: 'k 超过了采样数', next: '把 k 改成 1 到 samples 之间的整数' },
+}
+export function evalErrorMessage(code: EvalErrorCode): string {
+  const human = EVAL_HUMAN[code]
+  return `${human.text}（${code}）｜下一步：${human.next}`
+}
 export function lintPack(input: unknown): string[] {
   const errors: string[] = []
   if (!input || typeof input !== 'object') return ['E_PACK_NOT_OBJECT']
@@ -66,9 +95,9 @@ export interface PassAtKResult { task_id: string; k: number; n: number; c: numbe
  */
 export function passAtK(task: PassAtKInput, k: number): PassAtKResult {
   const { samples, correct } = task
-  if (!Number.isInteger(samples) || samples < 1) throw new Error('E_EVAL_SAMPLES: samples must be a positive integer')
-  if (!Number.isInteger(correct) || correct < 0 || correct > samples) throw new Error('E_EVAL_CORRECT: correct must be between 0 and samples')
-  if (!Number.isInteger(k) || k < 1 || k > samples) throw new Error('E_EVAL_K: k must be between 1 and samples')
+  if (!Number.isInteger(samples) || samples < 1) throw new Error(evalErrorMessage('E_EVAL_SAMPLES'))
+  if (!Number.isInteger(correct) || correct < 0 || correct > samples) throw new Error(evalErrorMessage('E_EVAL_CORRECT'))
+  if (!Number.isInteger(k) || k < 1 || k > samples) throw new Error(evalErrorMessage('E_EVAL_K'))
   const denominator = comb(samples, k)
   const numerator = comb(samples - correct, k)
   const value = 1 - Number(numerator) / Number(denominator)

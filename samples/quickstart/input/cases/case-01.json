@@ -1,0 +1,5 @@
+{
+  "id": "case-01",
+  "prompt": "Two invoice lines are 88.50 and 44.00. Return the total as {\"total\": number}.",
+  "expected": { "total": 132.5 }
+}

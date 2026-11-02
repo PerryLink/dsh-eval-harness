@@ -1,6 +1,6 @@
 {
   "name": "dsh-eval-pack",
-  "version": "0.1.0-alpha.11",
+  "version": "0.1.0-alpha.12",
   "description": "Public/synthetic eval-pack lint and deterministic JSON grader; not a validated benchmark.",
   "type": "module",
   "main": "./lib/plugin/index.js",
@@ -29,11 +29,24 @@
     "CHANGELOG.md",
     "TROUBLESHOOTING.md",
     "screenshots.json",
-    "icon.svg"
+    "icon.svg",
+    "samples"
   ],
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "demo": {
+      "sample": "samples/quickstart/input",
+      "prompt": "我用自带样例跑一次评测：3 个样本里过了几个、哪个没过、pass@3 是多少？",
+      "expect": "samples/quickstart/expected/result.json",
+      "screenshot": "docs/assets/quickstart.png",
+      "reads": [
+        "用户指定的评测包 JSON、样本 JSON 与运行结果 JSON（样例：samples/quickstart/input）"
+      ],
+      "writes": [],
+      "network": false,
+      "external": []
     }
   },
   "engines": {

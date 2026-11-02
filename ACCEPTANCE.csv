@@ -1,8 +1,9 @@
-req_id,metric,actual,pass,source,counted
-EVAL-A01,valid pack accepted,true,true,public/synthetic,false
-EVAL-A02,duplicate task ids rejected,true,true,public/synthetic,false
-EVAL-A03,deterministic grade,true,true,public/synthetic,false
-EVAL-A04,canonical grading ignores key order,true,true,public/synthetic,false
-EVAL-A05,array order still matters,true,true,public/synthetic,false
-EVAL-A06,run summary pass rate,true,true,public/synthetic,false
-EVAL-A07,pass@k estimator,true,true,public/synthetic,false
+req_id,metric,threshold,actual,script,evidence_sha256,pass,source,counted
+EVAL-A01,valid pack accepted,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+EVAL-A02,duplicate task ids rejected,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+EVAL-A03,deterministic grade,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+EVAL-A04,canonical grading ignores key order,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+EVAL-A05,array order still matters,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+EVAL-A06,run summary pass rate,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+EVAL-A07,pass@k estimator,1/1,true,scripts/acceptance.mjs,90db286d2cac0014561c1c0d92103ed3d512ff0ffaf87575c7ab01b68da586b0,true,public/synthetic,false
+PS1-QS01,quickstart 样例与金标一致,1/1,1,scripts/acceptance.mjs,2ba7ea5016ceded8fdeb186844ddd89d51125920ad9fa4bee9eef888989ea7d1,true,synthetic/quickstart,true

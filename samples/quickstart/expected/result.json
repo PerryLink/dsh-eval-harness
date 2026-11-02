@@ -1,0 +1,70 @@
+{
+  "sample": "samples/quickstart/input",
+  "synthetic": true,
+  "pack": {
+    "name": "synthetic-invoice-basics",
+    "version": "1.0.0",
+    "tasks": 3
+  },
+  "lint": {
+    "ok": true,
+    "errors": []
+  },
+  "grades": [
+    {
+      "id": "case-01",
+      "pass": true
+    },
+    {
+      "id": "case-02",
+      "pass": false
+    },
+    {
+      "id": "case-03",
+      "pass": true
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "passed": 2,
+    "failed": 1,
+    "pass_rate": 0.666667,
+    "failures": [
+      "case-02"
+    ]
+  },
+  "pass_at_1": {
+    "mean": 0.633333,
+    "tasks": [
+      {
+        "task_id": "case-01",
+        "pass_at_k": 0.7
+      },
+      {
+        "task_id": "case-02",
+        "pass_at_k": 0.3
+      },
+      {
+        "task_id": "case-03",
+        "pass_at_k": 0.9
+      }
+    ]
+  },
+  "pass_at_3": {
+    "mean": 0.9,
+    "tasks": [
+      {
+        "task_id": "case-01",
+        "pass_at_k": 0.991667
+      },
+      {
+        "task_id": "case-02",
+        "pass_at_k": 0.708333
+      },
+      {
+        "task_id": "case-03",
+        "pass_at_k": 1
+      }
+    ]
+  }
+}

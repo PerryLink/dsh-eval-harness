@@ -1,0 +1,5 @@
+{
+  "id": "case-03",
+  "prompt": "Net is 100 and tax is 8%. Return {net, tax, gross} as numbers.",
+  "expected": { "net": 100, "tax": 8, "gross": 108 }
+}

@@ -1,0 +1,5 @@
+{
+  "id": "case-02",
+  "prompt": "Round 12.345 EUR half-up to two decimals. Return {\"amount\": string, \"currency\": string}.",
+  "expected": { "amount": "12.35", "currency": "EUR" }
+}
