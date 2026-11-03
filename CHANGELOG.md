@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.0] — 2026-11-03
+
+### Stable
+
+- First non-alpha release: tool names and the CLI surface are covered by a
+  compatibility promise (breaking changes require a minor bump).
+- Ships a quickstart sample, a one-line prompt, a permission block and real captures.
+
 ## [0.1.0-alpha.12] — 2026-11-01
 
 ### Security / Fixes
@@ -11,7 +19,7 @@
 
 - `eval.pass_at_k`: unbiased pass@k estimator `1 - C(n-c,k)/C(n,k)` with exact binomials, plus the per-task and mean values. Verified by `node --test test/*.test.mjs` (12/12).
 
-## [Unreleased]
+## [0.1.0] — 2026-11-01
 
 ### Added
 
