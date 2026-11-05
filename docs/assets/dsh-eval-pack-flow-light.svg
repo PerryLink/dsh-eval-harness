@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-label="dsh-eval-pack pipeline">
+<title>dsh-eval-pack pipeline</title>
+<rect width="1200" height="400" rx="18" fill="#ffffff"/>
+<text x="60" y="62" fill="#1f2328" font-family="ui-sans-serif,system-ui,sans-serif" font-size="30" font-weight="700">dsh-eval-pack</text>
+<text x="60" y="94" fill="#57606a" font-family="ui-monospace,monospace" font-size="16">eval-pack lint · deterministic JSON grade · pass@k · local only</text>
+<line x1="60" y1="116" x2="1140" y2="116" stroke="#d0d7de"/>
+<rect x="30" y="150" width="200" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="130" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">input JSON</text>
+<text x="130" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">pack · cases · run</text>
+<path d="M234 198h23" stroke="#57606a" stroke-width="3"/>
+<path d="M255 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="265" y="150" width="200" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="365" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">eval.pack_lint</text>
+<text x="365" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">name · version · unique id</text>
+<path d="M469 198h23" stroke="#57606a" stroke-width="3"/>
+<path d="M490 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="500" y="150" width="200" height="96" rx="14" fill="#f6f8fa" stroke="#4B67B4" stroke-width="2"/>
+<text x="600" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">eval.grade</text>
+<text x="600" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">canonical JSON equality</text>
+<path d="M704 198h23" stroke="#57606a" stroke-width="3"/>
+<path d="M725 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="735" y="150" width="200" height="96" rx="14" fill="#f6f8fa" stroke="#d0d7de" stroke-width="2"/>
+<text x="835" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">eval.summary</text>
+<text x="835" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">pass_rate · failures</text>
+<path d="M939 198h23" stroke="#57606a" stroke-width="3"/>
+<path d="M960 191l10 7-10 7" fill="none" stroke="#57606a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="970" y="150" width="200" height="96" rx="14" fill="#f6f8fa" stroke="#16a34a" stroke-width="2"/>
+<text x="1070" y="190" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="16" font-weight="700">eval.pass_at_k</text>
+<text x="1070" y="218" fill="#57606a" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12">1 - C(n-c,k) / C(n,k)</text>
+<path d="M365 246v39" stroke="#4B67B4" stroke-width="2" stroke-dasharray="5 5"/>
+<path d="M835 246v39" stroke="#4B67B4" stroke-width="2" stroke-dasharray="5 5"/>
+<rect x="30" y="285" width="1140" height="52" rx="12" fill="#f6f8fa" stroke="#4B67B4" stroke-width="2"/>
+<text x="600" y="318" fill="#1f2328" text-anchor="middle" font-family="ui-monospace,monospace" font-size="14">terminal summary only · no file write · no network · no model call</text>
+<text x="60" y="378" fill="#57606a" font-family="ui-monospace,monospace" font-size="13">read-only R0: eval.pack_lint · eval.grade · eval.summary · eval.pass_at_k · alpha · public/synthetic only</text>
+</svg>
