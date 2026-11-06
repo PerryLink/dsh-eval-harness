@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-light.svg" width="100%" alt="dsh-eval-pack 流程：pack.json、cases/*.json 与 run.json → eval.pack_lint → eval.grade（规范化 JSON 相等）→ eval.summary（通过率与失败 id）→ eval.pass_at_k（1 - C(n-c,k)/C(n,k)）；结果只出在终端，不写文件、不联网、不调用模型">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-hero-zh-dark.webp">
+  <img src="docs/assets/dsh-eval-pack-hero-zh-light.webp" width="100%" alt="dsh-eval-pack 横幅：左侧是插件名、两行价值句与页脚；右侧是评分回执——expected 与 actual 两份 JSON 只有键序不同，规范化后逐字节相等（PASS），下方列出 case-01 pass、case-02 fail、case-03 pass、2/3 通过率 0.666667、失败项 case-02，以及 pass@1 0.633333 与 pass@3 0.9">
 </picture>
 
 # dsh-eval-pack
@@ -39,6 +39,11 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 - **适合**：想复核一个小评测包（3–50 个样本）的通过率，需要确定性 JSON 相等评分、不接受模糊匹配的场景。
 - **不适合**：需要调用模型、主观打分或跑真实 benchmark 的场景；本包只做评分与汇总，不运行被测对象。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack 结构图：01 结构闸门——eval.pack_lint 检查 pack.json 的 name、version、tasks 非空与 id 唯一，任一不过即抛错；02 逐条对账——cases 里的 expected 与 run.json 里的 actual 分列两侧，各自规范化后在一次逐字节比较中判定：case-02 因 “12.35” 与 “12.34” 差一个字符判 fail，case-03 键序不同但排序后同串判 pass；03 读数——eval.summary 给出 2/3、0.666667 与失败项 case-02，eval.pass_at_k 按 1 − C(n−c,k)/C(n,k) 给出 pass@3 均值 0.9；全程只读，不写文件、不联网、不调用模型">
+</picture>
 
 ## 三步上手
 
@@ -294,9 +299,9 @@ node samples/quickstart/run.mjs --check                     # 合成样例，结
 | `test/` | `node --test`：5 个文件、14 个用例 |
 | `samples/quickstart/` | 合成评测包（3 样本 + run 结果 + 金标）与可复跑的 `run.mjs` |
 | `scripts/` | `acceptance.mjs`（验收复跑）、`gate.mjs`（门禁）、`lint.mjs`、`check-npm-name.mjs`、`gen-readme-assets.py`（配图） |
-| `docs/assets/` | 流程图（深/浅双版 SVG）与真实运行截图 |
+| `docs/assets/` | hero 横幅（四版 webp）、结构图（深/浅双版 SVG）与真实运行截图 |
 
-配图由 [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) 程序化生成（Python；手写 SVG 流程图深/浅双版、五语共用），可重复执行：`python scripts/gen-readme-assets.py`。
+配图由 [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) 程序化生成（Python：Pillow 绘制四版 hero 横幅 `hero-{zh,en}-{light,dark}.webp`；`flow-v5-{light,dark}.svg` 为手写 SVG 结构图，深/浅双版、五语共用），可重复执行：`python scripts/gen-readme-assets.py`。
 
 Topics：`deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`, `testing`
 

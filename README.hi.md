@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-light.svg" width="100%" alt="dsh-eval-pack प्रवाह: pack.json, cases/*.json और run.json → eval.pack_lint → eval.grade (कैनोनिकल JSON समानता) → eval.summary (पास दर और विफल id) → eval.pass_at_k (1 - C(n-c,k)/C(n,k)); परिणाम केवल टर्मिनल में, कोई फ़ाइल लेखन नहीं, कोई नेटवर्क नहीं, कोई मॉडल कॉल नहीं">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-hero-en-dark.webp">
+  <img src="docs/assets/dsh-eval-pack-hero-en-light.webp" width="100%" alt="dsh-eval-pack बैनर: बाईं ओर प्लगइन का नाम, दो मूल्य पंक्तियाँ और फ़ुटर; दाईं ओर एक ग्रेड रसीद — expected और actual JSON में केवल कुंजियों का क्रम अलग है और कैनोनिकल करने पर बाइट-दर-बाइट समान (PASS) होते हैं, साथ में case-01 pass, case-02 fail, case-03 pass, 2/3 का स्कोर 0.666667, विफलता case-02, pass@1 0.633333 और pass@3 0.9">
 </picture>
 
 # dsh-eval-pack
@@ -39,6 +39,11 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 - **किसके लिए उपयुक्त**: छोटे इवैल पैक (3–50 केस) की पास दर जाँचना, जहाँ नियतात्मक JSON समानता चाहिए और धुँधला मिलान स्वीकार्य नहीं।
 - **किसके लिए नहीं**: मॉडल कॉल, व्यक्तिपरक स्कोरिंग या असली benchmark चाहिए ऐसे परिदृश्य — यह पैकेज केवल स्कोर और सारांश करता है; परीक्षणाधीन सिस्टम को कभी नहीं चलाता।
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack संरचना: 01 पैक गेट — eval.pack_lint name, version, गैर-रिक्त tasks और अद्वितीय id जाँचता है, कोई भी विफलता त्रुटि देती है; 02 जोड़ीवार बेंच — cases का expected और run.json का actual दोनों ओर रहते हैं और कैनोनिकल होकर एक ही बाइट-तुलना में मिलते हैं: case-02 इसलिए विफल है कि 12.35 और 12.34 में एक अक्षर का अंतर है, case-03 इसलिए पास है कि अव्यवस्थित कुंजियाँ क्रम में लगकर एक ही स्ट्रिंग बनती हैं; 03 रीडआउट — eval.summary 2/3, 0.666667 और विफलता case-02 देता है, eval.pass_at_k 1 − C(n−c,k)/C(n,k) से pass@3 औसत 0.9 देता है; सब कुछ केवल-पढ़ने योग्य है — कोई फ़ाइल लेखन नहीं, कोई नेटवर्क नहीं, कोई मॉडल कॉल नहीं">
+</picture>
 
 ## तीन चरणों में शुरुआत
 
@@ -296,9 +301,9 @@ node samples/quickstart/run.mjs --check                     # सिंथेट
 | `test/` | `node --test`: 5 फ़ाइलें, 14 केस |
 | `samples/quickstart/` | सिंथेटिक इवैल पैक (3 केस + रन परिणाम + गोल्ड) और दोबारा चलाने योग्य `run.mjs` |
 | `scripts/` | `acceptance.mjs` (स्वीकृति दोबारा), `gate.mjs` (गेट), `lint.mjs`, `check-npm-name.mjs`, `gen-readme-assets.py` (चित्र) |
-| `docs/assets/` | फ़्लो डायग्राम (light/dark SVG जोड़ी) और असली रन स्क्रीनशॉट |
+| `docs/assets/` | हीरो बैनर (चार webp), संरचना चित्र (light/dark SVG जोड़ी) और असली रन स्क्रीनशॉट |
 
-README की छवियाँ [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) से प्रोग्रामेटिक रूप से बनती हैं (Python; हाथ से लिखी light/dark SVG फ़्लो जोड़ी, सभी पाँच भाषाओं में साझा) और दोबारा चलाई जा सकती हैं: `python scripts/gen-readme-assets.py`।
+README की छवियाँ [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) से प्रोग्रामेटिक रूप से बनती हैं (Python: Pillow चार hero बैनर `hero-{zh,en}-{light,dark}.webp` बनाता है; `flow-v5-{light,dark}.svg` हाथ से लिखा संरचना चित्र है, light/dark, सभी पाँच भाषाओं में साझा) और दोबारा चलाई जा सकती हैं: `python scripts/gen-readme-assets.py`।
 
 Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`, `testing`
 

@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-light.svg" width="100%" alt="dsh-eval-pack pipeline: pack.json, cases/*.json and run.json → eval.pack_lint → eval.grade (canonical JSON equality) → eval.summary (pass rate and failing ids) → eval.pass_at_k (1 - C(n-c,k)/C(n,k)); results go to the terminal only, no file writes, no network, no model call">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-hero-en-dark.webp">
+  <img src="docs/assets/dsh-eval-pack-hero-en-light.webp" width="100%" alt="dsh-eval-pack banner: left, the plugin name, two value lines and the footer; right, a grade receipt — the expected and actual JSON documents differ only in key order and canonicalise to identical bytes (PASS), with case-01 pass, case-02 fail, case-03 pass, a 2/3 tally at 0.666667, failure case-02, pass@1 0.633333 and pass@3 0.9">
 </picture>
 
 # dsh-eval-pack
@@ -39,6 +39,11 @@ It does one thing: compare a small eval pack case by case with exact JSON equali
 
 - **Good fit**: reviewing the pass rate of a small eval pack (3–50 cases) where deterministic JSON equality is required and fuzzy matching is not acceptable.
 - **Not a fit**: scenarios that need a model call, subjective scoring, or a real benchmark run — this package only grades and summarizes; it never runs the system under test.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack structure: 01 the pack gate — eval.pack_lint checks name, version, non-empty tasks and unique ids, and any failure throws; 02 the pairwise bench — expected from cases and actual from run.json sit on opposite sides and, once canonicalised, meet in one byte comparison: case-02 fails because 12.35 and 12.34 differ by one character, case-03 passes because unsorted keys sort to the same string; 03 the readouts — eval.summary gives 2/3, 0.666667 and failure case-02, and eval.pass_at_k gives pass@3 mean 0.9 via 1 − C(n−c,k)/C(n,k); everything is read-only — no file writes, no network, no model call">
+</picture>
 
 ## Three-step setup
 
@@ -296,9 +301,9 @@ Current version `0.1.1` (matches `package.json`). Tests: `node --test test/*.tes
 | `test/` | `node --test`: 5 files, 14 cases |
 | `samples/quickstart/` | Synthetic eval pack (3 cases + run result + gold file) and the re-runnable `run.mjs` |
 | `scripts/` | `acceptance.mjs` (acceptance re-run), `gate.mjs` (gate), `lint.mjs`, `check-npm-name.mjs`, `gen-readme-assets.py` (README images) |
-| `docs/assets/` | Flow diagram (light/dark SVG pair) and the real run screenshot |
+| `docs/assets/` | Hero banners (four webp files), the structure diagram (light/dark SVG pair) and the real run screenshot |
 
-The README images are generated programmatically by [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (Python; hand-written light/dark SVG pipeline shared by all five languages) and are safe to re-run: `python scripts/gen-readme-assets.py`.
+The README images are generated programmatically by [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (Python: Pillow draws the four hero banners `hero-{zh,en}-{light,dark}.webp`; the `flow-v5-{light,dark}.svg` structure diagram is hand-written SVG, light/dark, shared by all five languages) and are safe to re-run: `python scripts/gen-readme-assets.py`.
 
 Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`, `testing`
 

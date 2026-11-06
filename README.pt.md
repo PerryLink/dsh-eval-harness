@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-light.svg" width="100%" alt="Fluxo do dsh-eval-pack: pack.json, cases/*.json e run.json → eval.pack_lint → eval.grade (igualdade JSON canônica) → eval.summary (taxa de aprovação e ids com falha) → eval.pass_at_k (1 - C(n-c,k)/C(n,k)); os resultados saem apenas no terminal, sem gravar arquivos, sem rede e sem chamada a modelo">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-hero-en-dark.webp">
+  <img src="docs/assets/dsh-eval-pack-hero-en-light.webp" width="100%" alt="Banner do dsh-eval-pack: à esquerda, o nome do plugin, duas linhas de valor e o rodapé; à direita, um recibo de avaliação: os JSON expected e actual diferem apenas na ordem das chaves e canonicalizam para bytes idênticos (PASS), com case-01 pass, case-02 fail, case-03 pass, um placar 2/3 de 0.666667, falha case-02, pass@1 0.633333 e pass@3 0.9">
 </picture>
 
 # dsh-eval-pack
@@ -39,6 +39,11 @@ Ele faz uma coisa só: compara um pacote de avaliação pequeno caso a caso com 
 
 - **Adequado para**: revisar a taxa de aprovação de um pacote pequeno (3–50 casos) em que se exige igualdade JSON determinística e não se aceita correspondência difusa.
 - **Não adequado para**: cenários que exigem chamada a modelo, pontuação subjetiva ou um benchmark real — este pacote só pontua e resume; nunca executa o sistema sob teste.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="Estrutura do dsh-eval-pack: 01 o portão do pacote — eval.pack_lint verifica name, version, tasks não vazio e ids únicos, e qualquer falha lança erro; 02 a bancada par a par — expected de cases e actual de run.json ficam em lados opostos e, depois de canonicalizados, se encontram em uma única comparação byte a byte: case-02 falha porque 12.35 e 12.34 diferem em um caractere, case-03 passa porque chaves fora de ordem ordenam para o mesmo texto; 03 as leituras — eval.summary dá 2/3, 0.666667 e a falha case-02, e eval.pass_at_k dá a média pass@3 0.9 com 1 − C(n−c,k)/C(n,k); tudo é somente leitura: sem gravação de arquivos, sem rede e sem chamada a modelo">
+</picture>
 
 ## Instalação em três passos
 
@@ -296,9 +301,9 @@ Versão atual `0.1.1` (coincide com `package.json`). Testes: `node --test test/*
 | `test/` | `node --test`: 5 arquivos, 14 casos |
 | `samples/quickstart/` | Pacote sintético (3 casos + resultado de execução + gabarito) e o `run.mjs` repetível |
 | `scripts/` | `acceptance.mjs` (repetição da aceitação), `gate.mjs` (portão), `lint.mjs`, `check-npm-name.mjs`, `gen-readme-assets.py` (imagens) |
-| `docs/assets/` | Diagrama de fluxo (par SVG claro/escuro) e a captura real da execução |
+| `docs/assets/` | Banners hero (quatro webp), o diagrama de estrutura (par SVG claro/escuro) e a captura real da execução |
 
-As imagens do README são geradas programaticamente por [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (Python; par SVG de fluxo claro/escuro escrito à mão e compartilhado pelos cinco idiomas) e podem ser repetidas: `python scripts/gen-readme-assets.py`.
+As imagens do README são geradas programaticamente por [`scripts/gen-readme-assets.py`](scripts/gen-readme-assets.py) (Python: o Pillow desenha os quatro banners hero `hero-{zh,en}-{light,dark}.webp`; o diagrama `flow-v5-{light,dark}.svg` é SVG escrito à mão, claro/escuro, compartilhado pelos cinco idiomas) e podem ser repetidas: `python scripts/gen-readme-assets.py`.
 
 Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`, `testing`
 
