@@ -35,14 +35,14 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 ## Qué es
 
-Hace una sola cosa: compara un paquete de evaluación pequeño caso por caso con igualdad JSON exacta y devuelve la tasa de aprobación, los ids fallidos y el pass@k. `eval.pack_lint` revisa el paquete (`name`, `version`, ids de tarea únicos), `eval.grade` califica por igualdad JSON canónica, `eval.summary` condensa una ejecución en tasa de aprobación y lista de fallos, y `eval.pass_at_k` estima `1 - C(n-c, k) / C(n, k)`. Las cuatro herramientas son funciones puras y totalmente de solo lectura: no escriben archivos, no usan la red y no llaman a un modelo; las entradas las lee la sesión y se pasan como argumentos, y los archivos originales no se tocan.
+Hace una sola cosa: compara un paquete de evaluación pequeño caso por caso con igualdad JSON exacta y devuelve la tasa de aprobación, los ids fallidos y el pass@k. `eval_pack_lint` revisa el paquete (`name`, `version`, ids de tarea únicos), `eval_grade` califica por igualdad JSON canónica, `eval_summary` condensa una ejecución en tasa de aprobación y lista de fallos, y `eval_pass_at_k` estima `1 - C(n-c, k) / C(n, k)`. Las cuatro herramientas son funciones puras y totalmente de solo lectura: no escriben archivos, no usan la red y no llaman a un modelo; las entradas las lee la sesión y se pasan como argumentos, y los archivos originales no se tocan.
 
 - **Adecuado para**: revisar la tasa de aprobación de un paquete pequeño (3–50 casos) donde se exige igualdad JSON determinista y no se acepta coincidencia difusa.
 - **No adecuado para**: escenarios que necesitan llamadas a un modelo, puntuación subjetiva o un benchmark real — este paquete solo califica y resume; nunca ejecuta el sistema bajo prueba.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="Estructura de dsh-eval-pack: 01 la puerta del paquete — eval.pack_lint comprueba name, version, tasks no vacío e ids únicos, y cualquier fallo lanza un error; 02 el banco por pares — expected de cases y actual de run.json se sitúan a ambos lados y, ya canonizados, se encuentran en una sola comparación byte a byte: case-02 falla porque 12.35 y 12.34 difieren en un carácter, case-03 pasa porque las claves desordenadas se ordenan al mismo texto; 03 las lecturas — eval.summary da 2/3, 0.666667 y el fallo case-02, y eval.pass_at_k da la media pass@3 0.9 con 1 − C(n−c,k)/C(n,k); todo es de solo lectura: sin escritura de archivos, sin red y sin llamadas a un modelo">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="Estructura de dsh-eval-pack: 01 la puerta del paquete — eval_pack_lint comprueba name, version, tasks no vacío e ids únicos, y cualquier fallo lanza un error; 02 el banco por pares — expected de cases y actual de run.json se sitúan a ambos lados y, ya canonizados, se encuentran en una sola comparación byte a byte: case-02 falla porque 12.35 y 12.34 difieren en un carácter, case-03 pasa porque las claves desordenadas se ordenan al mismo texto; 03 las lecturas — eval_summary da 2/3, 0.666667 y el fallo case-02, y eval_pass_at_k da la media pass@3 0.9 con 1 − C(n−c,k)/C(n,k); todo es de solo lectura: sin escritura de archivos, sin red y sin llamadas a un modelo">
 </picture>
 
 ## Instalación en tres pasos
@@ -98,22 +98,22 @@ Todos los plugins de PerryLink están en el mercado integrado de DSH Desktop: **
 
 ## Capacidades clave
 
-- **Lint de la estructura del paquete** — `eval.pack_lint` revisa `name`, `version`, un `tasks` no vacío y la unicidad de los ids de tarea, y devuelve `ok` más un array de códigos de error; no ejecuta ninguna evaluación.
-- **Calificación JSON determinista** — `eval.grade` primero canonicaliza ambos lados (claves de objeto ordenadas, arrays en su orden) y compara las serializaciones byte a byte: el orden de las claves da igual, mientras que el orden de los arrays, la precisión numérica y las mayúsculas de las cadenas se comparan tal cual.
-- **Resumen de una ejecución** — `eval.summary` informa `total`, `passed`, `failed`, `pass_rate` (seis decimales) y los ids de tarea fallidos, con la misma regla de calificación.
-- **pass@k insesgado** — `eval.pass_at_k` calcula `1 - C(n-c, k) / C(n, k)` con binomios exactos vía BigInt y devuelve el `pass_at_k` por tarea más la media; `k > samples` y `correct > samples` fallan en voz alta.
+- **Lint de la estructura del paquete** — `eval_pack_lint` revisa `name`, `version`, un `tasks` no vacío y la unicidad de los ids de tarea, y devuelve `ok` más un array de códigos de error; no ejecuta ninguna evaluación.
+- **Calificación JSON determinista** — `eval_grade` primero canonicaliza ambos lados (claves de objeto ordenadas, arrays en su orden) y compara las serializaciones byte a byte: el orden de las claves da igual, mientras que el orden de los arrays, la precisión numérica y las mayúsculas de las cadenas se comparan tal cual.
+- **Resumen de una ejecución** — `eval_summary` informa `total`, `passed`, `failed`, `pass_rate` (seis decimales) y los ids de tarea fallidos, con la misma regla de calificación.
+- **pass@k insesgado** — `eval_pass_at_k` calcula `1 - C(n-c, k) / C(n, k)` con binomios exactos vía BigInt y devuelve el `pass_at_k` por tarea más la media; `k > samples` y `correct > samples` fallan en voz alta.
 - **Puramente local y de solo lectura** — las cuatro herramientas están marcadas **R0**: sin escrituras de archivos, sin cambios de configuración, sin llamadas HTTP / DNS / WebSocket en el código y sin llamadas a un modelo.
 
 ### Superficie de herramientas
 
-Los nombres de las herramientas son una API estable; las cuatro son R0 de solo lectura.
+Los nombres de las herramientas son una API estable; las cuatro son R0 de solo lectura. Los nombres solo usan letras ASCII, dígitos y guiones bajos, y cumplen la validación `^[a-zA-Z0-9_-]+$` del proveedor sobre `tools[].name`.
 
 | Herramienta | Propósito | Riesgo |
 |---|---|---|
-| `eval.pack_lint` | Validar `name` / `version` / `tasks` no vacío e ids de tarea únicos | R0 solo lectura |
-| `eval.grade` | Calificación determinista por igualdad JSON de una tarea | R0 solo lectura |
-| `eval.summary` | Resumir una ejecución: aprobados, tasa de aprobación, ids fallidos | R0 solo lectura |
-| `eval.pass_at_k` | pass@k insesgado y su media a partir de los conteos de muestreo | R0 solo lectura |
+| `eval_pack_lint` | Validar `name` / `version` / `tasks` no vacío e ids de tarea únicos | R0 solo lectura |
+| `eval_grade` | Calificación determinista por igualdad JSON de una tarea | R0 solo lectura |
+| `eval_summary` | Resumir una ejecución: aprobados, tasa de aprobación, ids fallidos | R0 solo lectura |
+| `eval_pass_at_k` | pass@k insesgado y su media a partir de los conteos de muestreo | R0 solo lectura |
 
 ### Entrada y salida
 
@@ -184,10 +184,10 @@ Argumentos de las herramientas (todos obligatorios; los valores inválidos falla
 
 | Argumento | Herramienta | Restricción | Significado |
 |---|---|---|---|
-| `pack` | `eval.pack_lint` | un objeto JSON | El objeto del paquete completo |
-| `actual` / `expected` | `eval.grade` | cualquier JSON | Los dos lados de la comparación canónica |
-| `results[]` | `eval.summary` | cada elemento con `id` / `actual` / `expected` | Resultados por caso de una ejecución |
-| `k` / `tasks[]` | `eval.pass_at_k` | `1 ≤ k ≤ samples`; `0 ≤ correct ≤ samples` | Estadística de muestreo y la `k` de pass@k |
+| `pack` | `eval_pack_lint` | un objeto JSON | El objeto del paquete completo |
+| `actual` / `expected` | `eval_grade` | cualquier JSON | Los dos lados de la comparación canónica |
+| `results[]` | `eval_summary` | cada elemento con `id` / `actual` / `expected` | Resultados por caso de una ejecución |
+| `k` / `tasks[]` | `eval_pass_at_k` | `1 ≤ k ≤ samples`; `0 ≤ correct ≤ samples` | Estadística de muestreo y la `k` de pass@k |
 
 > Regla de calificación: el orden de las claves no importa, el de los arrays sí, y los números deben ser exactamente iguales; `pass_rate` y `pass_at_k` se redondean a seis decimales (`0.666667`).
 
@@ -287,18 +287,18 @@ Cada paquete complementario es independiente, con su propia superficie de herram
 
 ```sh
 pnpm install --frozen-lockfile                             # node >=24.9 <25
-pnpm build && pnpm lint && pnpm typecheck && pnpm test      # build tsc + lint + 14 casos node --test
+pnpm build && pnpm lint && pnpm typecheck && pnpm test      # build tsc + lint + 15 casos node --test
 pnpm gate                                                   # puerta de aceptación: repite scripts/acceptance.mjs y valida la forma de las filas de ACCEPTANCE.csv
 node samples/quickstart/run.mjs --check                     # muestra sintética, debe imprimir quickstart ok
 ```
 
-Versión actual `0.1.1` (coincide con `package.json`). Pruebas: `node --test test/*.test.mjs` todo en verde (5 archivos de prueba, 14 casos; `pnpm test` compila primero). `lib/` es la salida de tsc y no se versiona (`.gitignore`), así que ejecuta `pnpm build` antes de la muestra o de las pruebas.
+Versión actual `0.2.0` (coincide con `package.json`). Pruebas: `node --test test/*.test.mjs` todo en verde (6 archivos de prueba, 15 casos; `pnpm test` compila primero). `lib/` es la salida de tsc y no se versiona (`.gitignore`), así que ejecuta `pnpm build` antes de la muestra o de las pruebas.
 
 | Directorio | Contenido |
 |---|---|
 | `src/core/harness.ts` | Funciones puras de lint / canonicalización / calificación / resumen / pass@k, más los nueve códigos de error |
 | `src/plugin/` | Entrada del plugin Cordis (`inject: ['tools']`) y las declaraciones `defineTool` de las cuatro herramientas |
-| `test/` | `node --test`: 5 archivos, 14 casos |
+| `test/` | `node --test`: 6 archivos, 15 casos |
 | `samples/quickstart/` | Paquete sintético (3 casos + resultado de ejecución + oro) y el `run.mjs` repetible |
 | `scripts/` | `acceptance.mjs` (repetición de aceptación), `gate.mjs` (puerta), `lint.mjs`, `check-npm-name.mjs`, `gen-readme-assets.py` (imágenes) |
 | `docs/assets/` | Banners hero (cuatro webp), el diagrama de estructura (par SVG claro/oscuro) y la captura real de la ejecución |
@@ -311,7 +311,7 @@ Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`,
 
 Este proyecto forma parte de la familia de plugins de DeepSeek Harness de [PerryLink](https://github.com/PerryLink) (todos Apache-2.0). Si te resulta útil, **una estrella ayuda a que la siguiente persona lo encuentre** — no hay nada bloqueado tras ella.
 
-- [@PerryLink](https://github.com/PerryLink) — creador y mantenedor: el núcleo de funciones puras para lint / calificación determinista / resumen / pass@k, las cuatro herramientas `eval.*`, la muestra sintética quickstart y la suite de aceptación, y la documentación en cinco idiomas.
+- [@PerryLink](https://github.com/PerryLink) — creador y mantenedor: el núcleo de funciones puras para lint / calificación determinista / resumen / pass@k, las cuatro herramientas `eval_*`, la muestra sintética quickstart y la suite de aceptación, y la documentación en cinco idiomas.
 
 ## Licencia
 

@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.2.0] — 2026-11-13
+
+### Breaking
+
+- **Tool names no longer contain a dot.** The provider validates `tools[].name`
+  against `^[a-zA-Z0-9_-]+$`; the 0.1.x names joined `eval` and the verb with a
+  dot, so the provider rejected the whole `tools` array with
+  `Invalid 'tools[N].name'` — the plugin registered, but no request carrying its
+  tools could succeed. Rename on upgrade:
+
+  | 0.1.x (two parts, dot) | 0.2.0 |
+  |---|---|
+  | `eval` + `pack_lint` | `eval_pack_lint` |
+  | `eval` + `grade` | `eval_grade` |
+  | `eval` + `summary` | `eval_summary` |
+  | `eval` + `pass_at_k` | `eval_pass_at_k` |
+
+- No aliases: the dotted names are gone, so prompts, scripts and permission
+  rules must move to the underscore names from 0.1.x to 0.2.0. Nothing else
+  changes — arguments, results and error codes are identical.
+- Minor bump rather than a patch, per the compatibility promise that tool names
+  are a stable API and breaking changes require a minor bump.
+
+### Added
+
+- Regression test `test/tool-name-wire.test.mjs`: every registered tool name
+  must match `^[a-zA-Z0-9_-]+$`, contain no dot, keep the `eval_` namespace and
+  be unique — so a dotted name can never ship again.
+
+### Changed
+
+- READMEs (five languages), `TROUBLESHOOTING.md`, the quickstart sample, the
+  acceptance suite, the diagrams and their generator all use the underscore
+  names, and the READMEs state the wire-name rule. Earlier entries here use the
+  new spelling too, so a repository-wide search no longer finds dotted names.
+
 ## [0.1.0] — 2026-11-03
 
 ### Stable
@@ -17,13 +53,13 @@
 
 ### Added
 
-- `eval.pass_at_k`: unbiased pass@k estimator `1 - C(n-c,k)/C(n,k)` with exact binomials, plus the per-task and mean values. Verified by `node --test test/*.test.mjs` (12/12).
+- `eval_pass_at_k`: unbiased pass@k estimator `1 - C(n-c,k)/C(n,k)` with exact binomials, plus the per-task and mean values. Verified by `node --test test/*.test.mjs` (12/12).
 
 ## [0.1.0] — 2026-11-01
 
 ### Added
 
-- `eval.summary`: aggregate pass count, pass rate and failing task ids for a graded run, using the same grader as `eval.grade`.
+- `eval_summary`: aggregate pass count, pass rate and failing task ids for a graded run, using the same grader as `eval_grade`.
 - Canonical-JSON grading: object key order no longer changes the verdict; array order still matters.
 
 Verified by `node --test test/*.test.mjs` (7/7).

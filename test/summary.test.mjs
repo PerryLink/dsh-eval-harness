@@ -33,7 +33,7 @@ test('an empty run has a zero pass rate and no failures', () => {
 })
 
 test('the tool exposes the summary', async () => {
-  const r = await tools['eval.summary'].execute({ results: [{ id: 't1', actual: { x: 1, y: 2 }, expected: { y: 2, x: 1 } }] }, exec)
+  const r = await tools['eval_summary'].execute({ results: [{ id: 't1', actual: { x: 1, y: 2 }, expected: { y: 2, x: 1 } }] }, exec)
   assert.equal(r.passed, 1)
   assert.equal(r.pass_rate, 1)
 })
