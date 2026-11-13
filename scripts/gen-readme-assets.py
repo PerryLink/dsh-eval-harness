@@ -215,7 +215,7 @@ HERO = {
         sub="四个 R0 只读工具；不写文件、不联网、不调用模型",
         meta="pack.json · cases/*.json · run.json · 终端摘要",
         foot="Apache-2.0 · PerryLink DSH plugin family · v0.1.1",
-        panel="评分回执 · eval.grade",
+        panel="评分回执 · eval_grade",
         panel_right="synthetic · 2026-11-02",
         expected="expected", actual="actual",
         path_left="cases/case-03.json",
@@ -244,7 +244,7 @@ HERO = {
         sub="R0 read-only · no writes · no network · no model call",
         meta="pack.json · cases/*.json · run.json · terminal summary",
         foot="Apache-2.0 · PerryLink DSH plugin family · v0.1.1",
-        panel="GRADE RECEIPT · eval.grade",
+        panel="GRADE RECEIPT · eval_grade",
         panel_right="synthetic · 2026-11-02",
         expected="expected", actual="actual",
         path_left="cases/case-03.json",
@@ -471,7 +471,7 @@ def flow_svg(skin: str) -> str:
         add(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{h / 2}" '
             f'fill="{fill}"{st}/>')
 
-    add(f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="dsh-eval-pack structure: a pack gate (eval.pack_lint) checks pack.json, then the two documents — expected from cases and actual from run.json — are canonicalised on opposite sides of one comparison gutter and compared byte for byte, then eval.summary and eval.pass_at_k produce the readouts">
+    add(f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="dsh-eval-pack structure: a pack gate (eval_pack_lint) checks pack.json, then the two documents — expected from cases and actual from run.json — are canonicalised on opposite sides of one comparison gutter and compared byte for byte, then eval_summary and eval_pass_at_k produce the readouts">
 <title>dsh-eval-pack: one pack gate, one comparison gutter, two readouts</title>
 <defs>
   <linearGradient id="bg" x1="0" y1="0" x2="0.25" y2="1">
@@ -509,7 +509,7 @@ def flow_svg(skin: str) -> str:
 
     # ------------------------------------------------------- 01 pack gate tier
     card(40, 106, 1020, 118, r=20)
-    t(62, 132, "01 · PACK GATE · eval.pack_lint", 13, s["accent"], "700",
+    t(62, 132, "01 · PACK GATE · eval_pack_lint", 13, s["accent"], "700",
       MONO, ls="1.1")
     t(1038, 132, "synthetic-invoice-basics@1.0.0 · 3 tasks", 13, s["faint"],
       "400", MONO, "end", maxw=400)
@@ -543,7 +543,7 @@ def flow_svg(skin: str) -> str:
 
     # ------------------------------------------------------ 02 comparison tier
     card(40, 252, 1020, 260, r=20)
-    t(62, 278, "02 · CANONICAL COMPARE · eval.grade", 13, s["accent"],
+    t(62, 278, "02 · CANONICAL COMPARE · eval_grade", 13, s["accent"],
       "700", MONO, ls="1.1")
     t(1038, 278, "keys sorted · arrays in order · bytes compared", 13,
       s["faint"], "400", MONO, "end", maxw=400)
@@ -607,9 +607,9 @@ def flow_svg(skin: str) -> str:
 
     # --------------------------------------------------------- 03 readouts tier
     card(40, 528, 1020, 96, r=20)
-    t(62, 552, "03 · TALLY · eval.summary", 13, s["accent"], "700", MONO,
+    t(62, 552, "03 · TALLY · eval_summary", 13, s["accent"], "700", MONO,
       ls="1.1")
-    t(660, 552, "eval.pass_at_k · k = 3 · sampling[]", 13, s["accent"], "700",
+    t(660, 552, "eval_pass_at_k · k = 3 · sampling[]", 13, s["accent"], "700",
       MONO, ls="1.1")
     add(f'<line x1="646" y1="540" x2="646" y2="612" stroke="{s["grid"]}"/>')
 

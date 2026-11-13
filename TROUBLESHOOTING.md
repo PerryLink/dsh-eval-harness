@@ -7,7 +7,7 @@
 
 - **症状**：`评测包里一个任务都没有（E_PACK_TASKS_EMPTY）｜下一步：往 tasks 里至少放一个带 id 的任务`
 - **原因**：`pack.json` 缺少 `name` / `version`，或 `tasks` 为空、任务 id 重复。
-- **动作**：先跑 `eval.pack_lint`；按返回的错误码补齐字段、把重复 id 改成唯一值，再评分。
+- **动作**：先跑 `eval_pack_lint`；按返回的错误码补齐字段、把重复 id 改成唯一值，再评分。
 
 ## 2. 正确样本数超过采样数（E_EVAL_CORRECT）
 

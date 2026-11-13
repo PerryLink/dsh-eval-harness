@@ -32,19 +32,19 @@ async function run() {
   const call = (name, args) => tools[name].execute(args, { callId: 'quickstart' })
   const actualById = new Map(reference.results.map((result) => [result.id, result.actual]))
 
-  const lint = await call('eval.pack_lint', { pack })
+  const lint = await call('eval_pack_lint', { pack })
   const results = []
   const grades = []
   for (const testCase of cases) {
     const actual = actualById.get(testCase.id)
     assert.notEqual(actual, undefined, `run.json has no result for ${testCase.id}`)
-    const graded = await call('eval.grade', { actual, expected: testCase.expected })
+    const graded = await call('eval_grade', { actual, expected: testCase.expected })
     grades.push({ id: testCase.id, pass: graded.pass })
     results.push({ id: testCase.id, actual, expected: testCase.expected })
   }
-  const summary = await call('eval.summary', { results })
-  const pass1 = await call('eval.pass_at_k', { k: 1, tasks: reference.sampling })
-  const pass3 = await call('eval.pass_at_k', { k: 3, tasks: reference.sampling })
+  const summary = await call('eval_summary', { results })
+  const pass1 = await call('eval_pass_at_k', { k: 1, tasks: reference.sampling })
+  const pass3 = await call('eval_pass_at_k', { k: 3, tasks: reference.sampling })
   const compact = (result) => ({ mean: result.mean, tasks: result.tasks.map((task) => ({ task_id: task.task_id, pass_at_k: task.pass_at_k })) })
 
   return {

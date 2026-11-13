@@ -35,7 +35,7 @@ test('invalid inputs are rejected and the mean is reported', () => {
 })
 
 test('the tool exposes the per-task and mean values', async () => {
-  const r = await tools['eval.pass_at_k'].execute({ k: 1, tasks: [{ task_id: 'a', samples: 4, correct: 1 }] }, exec)
+  const r = await tools['eval_pass_at_k'].execute({ k: 1, tasks: [{ task_id: 'a', samples: 4, correct: 1 }] }, exec)
   assert.equal(r.k, 1)
   assert.equal(r.tasks[0].pass_at_k, 0.25)
   assert.equal(r.mean, 0.25)

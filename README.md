@@ -35,14 +35,14 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 ## 它是什么
 
-它只做一件事：把一小包评测样本逐条按 JSON 精确比对，给出通过率、失败项和 pass@k。`eval.pack_lint` 先检查包本身（`name`、`version`、任务 id 唯一性），`eval.grade` 做规范化 JSON 相等评分，`eval.summary` 把一次运行汇成通过率与失败清单，`eval.pass_at_k` 按无偏估计 `1 - C(n-c, k) / C(n, k)` 算采样通过率。四个工具都是纯函数、全部只读：不写文件、不联网、不调用模型；输入由会话读取后作为参数传入，原文件不动。
+它只做一件事：把一小包评测样本逐条按 JSON 精确比对，给出通过率、失败项和 pass@k。`eval_pack_lint` 先检查包本身（`name`、`version`、任务 id 唯一性），`eval_grade` 做规范化 JSON 相等评分，`eval_summary` 把一次运行汇成通过率与失败清单，`eval_pass_at_k` 按无偏估计 `1 - C(n-c, k) / C(n, k)` 算采样通过率。四个工具都是纯函数、全部只读：不写文件、不联网、不调用模型；输入由会话读取后作为参数传入，原文件不动。
 
 - **适合**：想复核一个小评测包（3–50 个样本）的通过率，需要确定性 JSON 相等评分、不接受模糊匹配的场景。
 - **不适合**：需要调用模型、主观打分或跑真实 benchmark 的场景；本包只做评分与汇总，不运行被测对象。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack 结构图：01 结构闸门——eval.pack_lint 检查 pack.json 的 name、version、tasks 非空与 id 唯一，任一不过即抛错；02 逐条对账——cases 里的 expected 与 run.json 里的 actual 分列两侧，各自规范化后在一次逐字节比较中判定：case-02 因 “12.35” 与 “12.34” 差一个字符判 fail，case-03 键序不同但排序后同串判 pass；03 读数——eval.summary 给出 2/3、0.666667 与失败项 case-02，eval.pass_at_k 按 1 − C(n−c,k)/C(n,k) 给出 pass@3 均值 0.9；全程只读，不写文件、不联网、不调用模型">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack 结构图：01 结构闸门——eval_pack_lint 检查 pack.json 的 name、version、tasks 非空与 id 唯一，任一不过即抛错；02 逐条对账——cases 里的 expected 与 run.json 里的 actual 分列两侧，各自规范化后在一次逐字节比较中判定：case-02 因 “12.35” 与 “12.34” 差一个字符判 fail，case-03 键序不同但排序后同串判 pass；03 读数——eval_summary 给出 2/3、0.666667 与失败项 case-02，eval_pass_at_k 按 1 − C(n−c,k)/C(n,k) 给出 pass@3 均值 0.9；全程只读，不写文件、不联网、不调用模型">
 </picture>
 
 ## 三步上手
@@ -96,22 +96,22 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 ## 核心能力
 
-- **包结构 lint** —— `eval.pack_lint` 检查 `name`、`version`、`tasks` 非空与任务 id 唯一，返回 `ok` 与错误码数组；不跑任何评测。
-- **确定性 JSON 评分** —— `eval.grade` 先把两侧递归规范化成「对象键排序、数组保序」的稳定串，再逐字节比较：键顺序不影响结果，数组顺序、数字精度、字符串大小写都按原样比较。
-- **一次运行汇总** —— `eval.summary` 给出 `total`、`passed`、`failed`、`pass_rate`（六位小数）与失败任务 id，用的是同一把评分尺子。
-- **无偏 pass@k** —— `eval.pass_at_k` 按 `1 - C(n-c, k) / C(n, k)` 用 BigInt 精确组合数计算，返回逐任务 `pass_at_k` 与均值；`k > samples`、`correct > samples` 直接报错。
+- **包结构 lint** —— `eval_pack_lint` 检查 `name`、`version`、`tasks` 非空与任务 id 唯一，返回 `ok` 与错误码数组；不跑任何评测。
+- **确定性 JSON 评分** —— `eval_grade` 先把两侧递归规范化成「对象键排序、数组保序」的稳定串，再逐字节比较：键顺序不影响结果，数组顺序、数字精度、字符串大小写都按原样比较。
+- **一次运行汇总** —— `eval_summary` 给出 `total`、`passed`、`failed`、`pass_rate`（六位小数）与失败任务 id，用的是同一把评分尺子。
+- **无偏 pass@k** —— `eval_pass_at_k` 按 `1 - C(n-c, k) / C(n, k)` 用 BigInt 精确组合数计算，返回逐任务 `pass_at_k` 与均值；`k > samples`、`correct > samples` 直接报错。
 - **纯本地只读** —— 四个工具全部标 **R0**：不写文件、不改配置，源码里没有 HTTP / DNS / WebSocket 调用，也不调用模型。
 
 ### 工具面
 
-工具名是稳定 API；四个工具全部 R0 只读。
+工具名是稳定 API；四个工具全部 R0 只读。工具名只含 ASCII 字母、数字与下划线，匹配 provider 对 `tools[].name` 的 `^[a-zA-Z0-9_-]+$` 校验。
 
 | 工具 | 用途 | 风险 |
 |---|---|---|
-| `eval.pack_lint` | 校验评测包 `name` / `version` / `tasks` 非空与任务 id 唯一 | R0 只读 |
-| `eval.grade` | 单个任务的确定性 JSON 相等评分 | R0 只读 |
-| `eval.summary` | 汇总一次运行：通过数、通过率、失败任务 id | R0 只读 |
-| `eval.pass_at_k` | 按采样数计算无偏 pass@k 与均值 | R0 只读 |
+| `eval_pack_lint` | 校验评测包 `name` / `version` / `tasks` 非空与任务 id 唯一 | R0 只读 |
+| `eval_grade` | 单个任务的确定性 JSON 相等评分 | R0 只读 |
+| `eval_summary` | 汇总一次运行：通过数、通过率、失败任务 id | R0 只读 |
+| `eval_pass_at_k` | 按采样数计算无偏 pass@k 与均值 | R0 只读 |
 
 ### 输入与输出
 
@@ -182,10 +182,10 @@ pass@1 mean 0.633333; pass@3 mean 0.9
 
 | 参数 | 工具 | 约束 | 含义 |
 |---|---|---|---|
-| `pack` | `eval.pack_lint` | 一个 JSON 对象 | 整个评测包对象 |
-| `actual` / `expected` | `eval.grade` | 任意 JSON | 参与规范化比较的两侧 |
-| `results[]` | `eval.summary` | 每项含 `id` / `actual` / `expected` | 一次运行的逐条结果 |
-| `k` / `tasks[]` | `eval.pass_at_k` | `1 ≤ k ≤ samples`；`0 ≤ correct ≤ samples` | 采样统计与 pass@k 的 `k` |
+| `pack` | `eval_pack_lint` | 一个 JSON 对象 | 整个评测包对象 |
+| `actual` / `expected` | `eval_grade` | 任意 JSON | 参与规范化比较的两侧 |
+| `results[]` | `eval_summary` | 每项含 `id` / `actual` / `expected` | 一次运行的逐条结果 |
+| `k` / `tasks[]` | `eval_pass_at_k` | `1 ≤ k ≤ samples`；`0 ≤ correct ≤ samples` | 采样统计与 pass@k 的 `k` |
 
 > 评分规则：对象键顺序不影响结果，数组顺序会影响结果，数字必须完全相等；`pass_rate` 与 `pass_at_k` 都保留六位小数（`0.666667`）。
 
@@ -285,18 +285,18 @@ pass@1 mean 0.633333; pass@3 mean 0.9
 
 ```sh
 pnpm install --frozen-lockfile                             # node >=24.9 <25
-pnpm build && pnpm lint && pnpm typecheck && pnpm test      # tsc 构建 + lint + 14 个 node --test 用例
+pnpm build && pnpm lint && pnpm typecheck && pnpm test      # tsc 构建 + lint + 15 个 node --test 用例
 pnpm gate                                                   # 验收门禁：重跑 scripts/acceptance.mjs 并校验 ACCEPTANCE.csv 行形状
 node samples/quickstart/run.mjs --check                     # 合成样例，结尾打印 quickstart ok
 ```
 
-当前版本 `0.1.1`（与 `package.json` 一致）。测试：`node --test test/*.test.mjs` 全绿（5 个测试文件、14 个用例；`pnpm test` 已内置构建步骤）。`lib/` 是 tsc 构建产物、不入库（`.gitignore`），所以跑样例与测试前先 `pnpm build`。
+当前版本 `0.2.0`（与 `package.json` 一致）。测试：`node --test test/*.test.mjs` 全绿（6 个测试文件、15 个用例；`pnpm test` 已内置构建步骤）。`lib/` 是 tsc 构建产物、不入库（`.gitignore`），所以跑样例与测试前先 `pnpm build`。
 
 | 目录 | 内容 |
 |---|---|
 | `src/core/harness.ts` | lint / 规范化 / 评分 / 汇总 / pass@k 的纯函数与九个错误码 |
 | `src/plugin/` | Cordis 插件入口（`inject: ['tools']`）与四个工具的 `defineTool` 声明 |
-| `test/` | `node --test`：5 个文件、14 个用例 |
+| `test/` | `node --test`：6 个文件、15 个用例 |
 | `samples/quickstart/` | 合成评测包（3 样本 + run 结果 + 金标）与可复跑的 `run.mjs` |
 | `scripts/` | `acceptance.mjs`（验收复跑）、`gate.mjs`（门禁）、`lint.mjs`、`check-npm-name.mjs`、`gen-readme-assets.py`（配图） |
 | `docs/assets/` | hero 横幅（四版 webp）、结构图（深/浅双版 SVG）与真实运行截图 |
@@ -309,7 +309,7 @@ Topics：`deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`
 
 本项目是 [PerryLink](https://github.com/PerryLink) 维护的 DeepSeek Harness 插件家族成员（全部 Apache-2.0）。如果这个插件帮到了你，**给个 star**——它不解锁任何功能，但会让下一个人更容易找到它。
 
-- [@PerryLink](https://github.com/PerryLink) —— 创建者与维护者：评测包 lint / 确定性评分 / 汇总 / pass@k 的纯函数核心、四个 `eval.*` 工具、quickstart 合成样例与验收套件、五语文档。
+- [@PerryLink](https://github.com/PerryLink) —— 创建者与维护者：评测包 lint / 确定性评分 / 汇总 / pass@k 的纯函数核心、四个 `eval_*` 工具、quickstart 合成样例与验收套件、五语文档。
 
 ## License
 

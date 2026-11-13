@@ -35,14 +35,14 @@ dsh plugin --profile <profile> add dsh-eval-pack
 
 ## What it is
 
-It does one thing: compare a small eval pack case by case with exact JSON equality and report the pass rate, the failing ids, and pass@k. `eval.pack_lint` checks the pack itself (`name`, `version`, unique task ids), `eval.grade` performs canonical JSON equality grading, `eval.summary` folds one run into a pass rate plus a failure list, and `eval.pass_at_k` estimates `1 - C(n-c, k) / C(n, k)`. All four tools are pure functions and fully read-only: no file writes, no network, no model call; inputs are read by the session and passed in as arguments, and the original files are never touched.
+It does one thing: compare a small eval pack case by case with exact JSON equality and report the pass rate, the failing ids, and pass@k. `eval_pack_lint` checks the pack itself (`name`, `version`, unique task ids), `eval_grade` performs canonical JSON equality grading, `eval_summary` folds one run into a pass rate plus a failure list, and `eval_pass_at_k` estimates `1 - C(n-c, k) / C(n, k)`. All four tools are pure functions and fully read-only: no file writes, no network, no model call; inputs are read by the session and passed in as arguments, and the original files are never touched.
 
 - **Good fit**: reviewing the pass rate of a small eval pack (3–50 cases) where deterministic JSON equality is required and fuzzy matching is not acceptable.
 - **Not a fit**: scenarios that need a model call, subjective scoring, or a real benchmark run — this package only grades and summarizes; it never runs the system under test.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/dsh-eval-pack-flow-v5-dark.svg">
-  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack structure: 01 the pack gate — eval.pack_lint checks name, version, non-empty tasks and unique ids, and any failure throws; 02 the pairwise bench — expected from cases and actual from run.json sit on opposite sides and, once canonicalised, meet in one byte comparison: case-02 fails because 12.35 and 12.34 differ by one character, case-03 passes because unsorted keys sort to the same string; 03 the readouts — eval.summary gives 2/3, 0.666667 and failure case-02, and eval.pass_at_k gives pass@3 mean 0.9 via 1 − C(n−c,k)/C(n,k); everything is read-only — no file writes, no network, no model call">
+  <img src="docs/assets/dsh-eval-pack-flow-v5-light.svg" width="100%" alt="dsh-eval-pack structure: 01 the pack gate — eval_pack_lint checks name, version, non-empty tasks and unique ids, and any failure throws; 02 the pairwise bench — expected from cases and actual from run.json sit on opposite sides and, once canonicalised, meet in one byte comparison: case-02 fails because 12.35 and 12.34 differ by one character, case-03 passes because unsorted keys sort to the same string; 03 the readouts — eval_summary gives 2/3, 0.666667 and failure case-02, and eval_pass_at_k gives pass@3 mean 0.9 via 1 − C(n−c,k)/C(n,k); everything is read-only — no file writes, no network, no model call">
 </picture>
 
 ## Three-step setup
@@ -98,22 +98,22 @@ Every PerryLink plugin is listed in the built-in DSH Desktop market: **Market �
 
 ## Core capabilities
 
-- **Pack-structure lint** — `eval.pack_lint` checks `name`, `version`, a non-empty `tasks` list, and unique task ids, returning `ok` plus an error-code array; it runs no evaluation.
-- **Deterministic JSON grading** — `eval.grade` first canonicalizes both sides into a stable form (object keys sorted, arrays kept in order) and compares the serializations byte for byte: key order does not matter, while array order, numeric precision, and string case are compared as-is.
-- **One-run summary** — `eval.summary` reports `total`, `passed`, `failed`, `pass_rate` (six decimals), and the failing task ids, using the same grading ruler.
-- **Unbiased pass@k** — `eval.pass_at_k` computes `1 - C(n-c, k) / C(n, k)` with exact BigInt binomials and returns a per-task `pass_at_k` plus the mean; `k > samples` and `correct > samples` fail loudly.
+- **Pack-structure lint** — `eval_pack_lint` checks `name`, `version`, a non-empty `tasks` list, and unique task ids, returning `ok` plus an error-code array; it runs no evaluation.
+- **Deterministic JSON grading** — `eval_grade` first canonicalizes both sides into a stable form (object keys sorted, arrays kept in order) and compares the serializations byte for byte: key order does not matter, while array order, numeric precision, and string case are compared as-is.
+- **One-run summary** — `eval_summary` reports `total`, `passed`, `failed`, `pass_rate` (six decimals), and the failing task ids, using the same grading ruler.
+- **Unbiased pass@k** — `eval_pass_at_k` computes `1 - C(n-c, k) / C(n, k)` with exact BigInt binomials and returns a per-task `pass_at_k` plus the mean; `k > samples` and `correct > samples` fail loudly.
 - **Purely local, read-only** — all four tools are marked **R0**: no file writes, no config changes, no HTTP / DNS / WebSocket calls in the source, and no model call.
 
 ### Tool surface
 
-Tool names are a stable API; all four tools are R0 read-only.
+Tool names are a stable API; all four tools are R0 read-only. Names use only ASCII letters, digits and underscores, matching the provider's `^[a-zA-Z0-9_-]+$` check on `tools[].name`.
 
 | Tool | Purpose | Risk |
 |---|---|---|
-| `eval.pack_lint` | Validate `name` / `version` / non-empty `tasks` and unique task ids | R0 read-only |
-| `eval.grade` | Deterministic JSON equality grade for one task | R0 read-only |
-| `eval.summary` | Summarize one run: pass count, pass rate, failing task ids | R0 read-only |
-| `eval.pass_at_k` | Unbiased pass@k and its mean from sampling counts | R0 read-only |
+| `eval_pack_lint` | Validate `name` / `version` / non-empty `tasks` and unique task ids | R0 read-only |
+| `eval_grade` | Deterministic JSON equality grade for one task | R0 read-only |
+| `eval_summary` | Summarize one run: pass count, pass rate, failing task ids | R0 read-only |
+| `eval_pass_at_k` | Unbiased pass@k and its mean from sampling counts | R0 read-only |
 
 ### Input and output
 
@@ -184,10 +184,10 @@ Tool arguments (all required; invalid values fail loudly):
 
 | Argument | Tool | Constraint | Meaning |
 |---|---|---|---|
-| `pack` | `eval.pack_lint` | a JSON object | The whole eval-pack object |
-| `actual` / `expected` | `eval.grade` | any JSON | The two sides of the canonical comparison |
-| `results[]` | `eval.summary` | each item has `id` / `actual` / `expected` | One run's per-case results |
-| `k` / `tasks[]` | `eval.pass_at_k` | `1 ≤ k ≤ samples`; `0 ≤ correct ≤ samples` | Sampling statistics and the `k` of pass@k |
+| `pack` | `eval_pack_lint` | a JSON object | The whole eval-pack object |
+| `actual` / `expected` | `eval_grade` | any JSON | The two sides of the canonical comparison |
+| `results[]` | `eval_summary` | each item has `id` / `actual` / `expected` | One run's per-case results |
+| `k` / `tasks[]` | `eval_pass_at_k` | `1 ≤ k ≤ samples`; `0 ≤ correct ≤ samples` | Sampling statistics and the `k` of pass@k |
 
 > Grading rule: key order does not matter, array order does, and numbers must be exactly equal; `pass_rate` and `pass_at_k` are both rounded to six decimals (`0.666667`).
 
@@ -287,18 +287,18 @@ Each companion package is a separate package with its own tool surface and versi
 
 ```sh
 pnpm install --frozen-lockfile                             # node >=24.9 <25
-pnpm build && pnpm lint && pnpm typecheck && pnpm test      # tsc build + lint + 14 node --test cases
+pnpm build && pnpm lint && pnpm typecheck && pnpm test      # tsc build + lint + 15 node --test cases
 pnpm gate                                                   # acceptance gate: re-runs scripts/acceptance.mjs and validates ACCEPTANCE.csv row shape
 node samples/quickstart/run.mjs --check                     # synthetic sample, should print quickstart ok
 ```
 
-Current version `0.1.1` (matches `package.json`). Tests: `node --test test/*.test.mjs` all green (5 test files, 14 cases; `pnpm test` builds first). `lib/` is the tsc build output and is not committed (`.gitignore`), so run `pnpm build` before the sample or the tests.
+Current version `0.2.0` (matches `package.json`). Tests: `node --test test/*.test.mjs` all green (6 test files, 15 cases; `pnpm test` builds first). `lib/` is the tsc build output and is not committed (`.gitignore`), so run `pnpm build` before the sample or the tests.
 
 | Directory | Contents |
 |---|---|
 | `src/core/harness.ts` | Pure functions for lint / canonicalization / grading / summary / pass@k, plus the nine error codes |
 | `src/plugin/` | Cordis plugin entry (`inject: ['tools']`) and the `defineTool` declarations of the four tools |
-| `test/` | `node --test`: 5 files, 14 cases |
+| `test/` | `node --test`: 6 files, 15 cases |
 | `samples/quickstart/` | Synthetic eval pack (3 cases + run result + gold file) and the re-runnable `run.mjs` |
 | `scripts/` | `acceptance.mjs` (acceptance re-run), `gate.mjs` (gate), `lint.mjs`, `check-npm-name.mjs`, `gen-readme-assets.py` (README images) |
 | `docs/assets/` | Hero banners (four webp files), the structure diagram (light/dark SVG pair) and the real run screenshot |
@@ -311,7 +311,7 @@ Topics: `deepseek-harness`, `dsh`, `dsh-plugin`, `eval`, `harness`, `perrylink`,
 
 This project is part of the DeepSeek Harness plugin family from [PerryLink](https://github.com/PerryLink) (all Apache-2.0). If it is useful, **a star helps the next person find it** — nothing is gated behind it.
 
-- [@PerryLink](https://github.com/PerryLink) — creator and maintainer: the pure-function core for pack lint / deterministic grading / summary / pass@k, the four `eval.*` tools, the quickstart synthetic sample and acceptance suite, and the five-language docs.
+- [@PerryLink](https://github.com/PerryLink) — creator and maintainer: the pure-function core for pack lint / deterministic grading / summary / pass@k, the four `eval_*` tools, the quickstart synthetic sample and acceptance suite, and the five-language docs.
 
 ## License
 
